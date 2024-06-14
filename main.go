@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -12,8 +14,7 @@ import (
 )
 
 const (
-	targetPrefix = "QFUNDS"
-	numWorkers   = 100
+	numWorkers = 100
 )
 
 type WalletResult struct {
@@ -23,7 +24,7 @@ type WalletResult struct {
 
 var totalTries uint64
 
-func worker(ctx context.Context, id int, wg *sync.WaitGroup, resultChan chan<- WalletResult) {
+func worker(ctx context.Context, id int, targetPrefix string, wg *sync.WaitGroup, resultChan chan<- WalletResult) {
 	defer wg.Done()
 
 	for {
@@ -59,6 +60,16 @@ func worker(ctx context.Context, id int, wg *sync.WaitGroup, resultChan chan<- W
 }
 
 func main() {
+	// Define and parse the command-line flag
+	targetPrefix := flag.String("prefix", "", "The target prefix for the wallet identity")
+	flag.Parse()
+
+	// Check if the prefix is empty and return an error if it is
+	if *targetPrefix == "" {
+		fmt.Println("Error: No prefix provided. Please specify a prefix using the -prefix flag.")
+		os.Exit(1)
+	}
+
 	var wg sync.WaitGroup
 	resultChan := make(chan WalletResult)
 
@@ -67,7 +78,7 @@ func main() {
 	// Start worker goroutines
 	for i := 0; i < numWorkers; i++ {
 		wg.Add(1)
-		go worker(ctx, i, &wg, resultChan)
+		go worker(ctx, i, *targetPrefix, &wg, resultChan)
 	}
 
 	// Wait for a result and then close the channel

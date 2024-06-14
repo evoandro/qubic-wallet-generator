@@ -1,92 +1,91 @@
-# Wallet Generator with Identity Prefix Matching
+# QUBIC Wallet Generator
 
-This Go program generates random wallets and checks if the identity of the wallet starts with a specified prefix (`QFUNDS`). The program runs multiple worker goroutines concurrently to speed up the process. When a matching wallet is found, the program outputs the details of the generated wallet.
+This Go program generates wallets with a specified prefix for the wallet identity. It leverages concurrency to quickly find a wallet that matches the desired prefix using multiple worker goroutines.
 
 ## Features
 
-- Concurrent wallet generation using goroutines.
-- Prefix matching for wallet identities.
-- Configurable number of workers.
-- Displays progress every 1,000,000 attempts.
+- Generates wallets concurrently using worker goroutines.
+- Supports specifying a target prefix for the wallet identity.
+- Prints the total number of attempts every 1,000,000 tries.
+- Exits with an error if no prefix is provided.
 
 ## Prerequisites
 
-- Go 1.16 or higher
+- Go 1.20 or later installed on your machine.
+- `github.com/qubic/go-node-connector/types` package installed.
 
 ## Installation
 
 1. Clone the repository:
 
-   ```sh
-   git clone https://github.com/your-username/wallet-generator.git
-   cd wallet-generator
-   ```
+    ```sh
+    git clone https://github.com/evoandro/qubic-wallet-generator.git
+    cd qubic-wallet-generator
+    ```
 
-2. Install the required dependencies:
+2. Install dependencies:
 
-   ```sh
-   go get ./...
-   ```
+    ```sh
+    go get -u github.com/qubic/go-node-connector/types
+    ```
 
 ## Usage
 
-1. Build the program:
+To run the program, use the following command, specifying your desired prefix:
 
-   ```sh
-   go build -o wallet-generator
-   ```
-
-2. Run the program:
-
-   ```sh
-   ./wallet-generator
-   ```
-
-## Configuration
-
-- `targetPrefix`: The prefix to match in the wallet identity. Default is `QFUNDS`.
-- `numWorkers`: The number of worker goroutines to run concurrently. Default is 1000.
-
-These values can be adjusted by modifying the corresponding constants in the `main.go` file:
-
-```go
-const (
-    targetPrefix = "QFUNDS"
-    numWorkers   = 1000
-)
+```sh
+go run main.go -prefix YOUR_PREFIX
 ```
 
-## Output
+Replace `YOUR_PREFIX` with the desired prefix for the wallet identity.
 
-When a wallet with the desired prefix is found, the program prints the following details:
+### Example
 
-- Seed
-- Private Key
-- Public Key
-- Identity
-
-Example output:
-
-```
-Seed: <seed_value>
-Private Key: <private_key_hex>
-Public Key: <public_key_hex>
-Identity: QFUNDS...
+```sh
+go run main.go -prefix QFUNDS
 ```
 
-## Notes
+## Build
 
-- The program will print the total number of attempts every 1,000,000 tries to track the progress.
-- The program will run until it finds a wallet that matches the specified prefix.
+To build the program, use the following command:
 
-## License
+```sh
+go build -o wallet-generator
+```
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+After building, you can run the program with the desired prefix as follows:
+
+```sh
+./wallet-generator -prefix YOUR_PREFIX
+```
+
+Replace `YOUR_PREFIX` with the desired prefix for the wallet identity.
+
+### Example
+
+```sh
+./wallet-generator -prefix QFUNDS
+```
+
+## Code Overview
+
+### `main.go`
+
+- `main()`: Parses the command-line flag for the prefix and initializes worker goroutines. Waits for a wallet result and prints the wallet details.
+- `worker()`: A worker function that generates random seeds, creates wallets, and checks if the wallet identity starts with the specified prefix.
+
+## Error Handling
+
+The program will exit with an error if no prefix is provided. Ensure to specify the `-prefix` flag when running the program.
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
+Contributions are welcome! Please fork the repository and open a pull request with your changes.
 
-## Acknowledgements
+## License
 
-This project uses the `go-node-connector` library for wallet generation. Special thanks to the authors and maintainers of this library.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+For any questions or inquiries, please open an issue or contact the repository owner.
