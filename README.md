@@ -42,7 +42,7 @@ Replace `YOUR_PREFIX` with the desired prefix for the wallet identity.
 ### Example
 
 ```sh
-go run main.go -prefix QFUNDS
+go run main.go -prefix QUBIC
 ```
 
 ## Build
@@ -64,7 +64,7 @@ Replace `YOUR_PREFIX` with the desired prefix for the wallet identity.
 ### Example
 
 ```sh
-./wallet-generator -prefix QFUNDS
+./wallet-generator -prefix QUBIC
 ```
 
 ## Code Overview
